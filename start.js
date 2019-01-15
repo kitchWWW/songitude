@@ -2,8 +2,9 @@
 DEBUG_ENABLED = true;
 GLOBAL_TIMESTEP = 200;
 
-ENTIRE_WORK = []
+ALL_SONGS = []
 IS_LIVE = false;
+EXPERIENCE_NAME = 'noSelection'
 
 
 options = {
@@ -11,6 +12,20 @@ options = {
   timeout: 5000,
   maximumAge: 0
 };
+
+function begin(){
+  var sel = document.getElementById('experienceSelector');
+  if(sel.value != 'noSelection'){
+    EXPERIENCE_NAME = sel.value
+    console.log("chosen: "+EXPERIENCE_NAME)
+  }
+  for(var key in ALL_SONGS){
+    for(i = 0; i < ALL_SONGS[key].length; i++){
+      ALL_SONGS[key][i].mute()
+    } 
+  }
+}
+
 
 function getLocation() {
   if (navigator.geolocation) {

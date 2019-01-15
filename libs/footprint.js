@@ -3,23 +3,25 @@
 class Footprint {
 
   constructor(file,maxLevel){
-    this.soundFilePath = file
+    this.soundFilePath = 'works_audio/' + EXPERIENCE_NAME + '/' + file + ".mp3"
     this.maxLevel = maxLevel
-    console.log("hi?")
+    this.parentWork = EXPERIENCE_NAME
   }
 
 	// used for the legwork
 	updateAudioForLocation(lat,lng){}
 	
 	//used to kill all sound
-	mute(){}
+	mute(){
+    this.soundFile.setVolume(0)
+  }
 
   loadAudio(){
     this.soundFile = loadSound(this.soundFilePath)
   }
 
   makeLive(){
-    console.log("we are live!")
+    console.log("we are live! from "+this.parentWork)
     this.soundFile.setVolume(0)
     this.soundFile.loop()
   }
@@ -29,24 +31,25 @@ class Footprint {
 
 class FPCircle extends Footprint{
   
-  constructor(lat,lng,diameter,color,file,maxLevel) {
+  constructor(file,maxLevel,color,geoInfo) {
     super(file,maxLevel)
-    this.shape = L.circle([lat, lng], {
+    this.shape = L.circle(geoInfo[0], {
       color: color,
       fillColor: color,
       fillOpacity: 0.1,
-      radius: diameter
+      radius: geoInfo[1]
   }).addTo(mymap);
-    this.lat = lat
-    this.lng = lng
-    this.diameter = diameter
-  
+    this.lat = geoInfo[0][0]
+    this.lng = geoInfo[0][1]
+    this.radius = geoInfo[1]
   }
 
   updateAudioForLocation(lat,lng){
+    console.log(this.parentWork)
     var distanceFromCenter = getDistanceFromLatLonInM(lat,lng,this.lat,this.lng)
-    if(distanceFromCenter < this.diameter){
-      var ratio = (this.diameter - distanceFromCenter) / this.diameter
+    if(distanceFromCenter < this.radius){
+      var ratio = (this.radius - distanceFromCenter) / this.radius
+      console.log(this.maxLevel)
       this.soundFile.setVolume(ratio * this.maxLevel,(GLOBAL_TIMESTEP/1000.0))
     }else{
       this.soundFile.setVolume(0,1)
@@ -57,15 +60,15 @@ class FPCircle extends Footprint{
 
 class FPPoly extends Footprint{
   
-  constructor(latlngs,fadeTime,color,file,maxLevel) {
+  constructor(file,maxLevel,color,geoInfo) {
     super(file,maxLevel)
-    this.shape = L.polygon(latlngs, {
+    this.shape = L.polygon(geoInfo, {
       color: color,
       fillColor: color,
       fillOpacity: 0.1,
   }).addTo(mymap);
-    this.latlngs = latlngs
-    this.fadeTime = fadeTime
+    this.geoInfo = geoInfo
+    this.fadeTime = 1
 
   }
 
