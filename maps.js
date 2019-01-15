@@ -20,8 +20,10 @@ function loopingLocationUpdate() {
   mySmoothedLocation[0] = mySmoothedLocation[0] + .1 * (myBestKnownLocation[0] -mySmoothedLocation[0])
   mySmoothedLocation[1] = mySmoothedLocation[1] + .1 * (myBestKnownLocation[1] -mySmoothedLocation[1])
   // update the audio to match
-  for(i = 0; i < ENTIRE_WORK.length; i++){
-    ENTIRE_WORK[i].updateAudioForLocation(mySmoothedLocation[0],mySmoothedLocation[1])
+  if(IS_LIVE){
+    for(i = 0; i < ENTIRE_WORK.length; i++){
+      ENTIRE_WORK[i].updateAudioForLocation(mySmoothedLocation[0],mySmoothedLocation[1])
+    }    
   }
   // and update the map to look like it
   updateMap()
