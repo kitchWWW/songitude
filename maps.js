@@ -38,7 +38,7 @@ function updateMap() {
 }
 
 function onMapClick(e) {
-  if(DEBUG_ENABLED){
+  if(true){
     myBestKnownLocation = [e.latlng.lat, e.latlng.lng];
     console.log(myBestKnownLocation);    
   }

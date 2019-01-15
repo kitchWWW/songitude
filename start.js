@@ -1,5 +1,5 @@
 
-DEBUG_ENABLED = true;
+DEBUG_ENABLED = false;
 GLOBAL_TIMESTEP = 200;
 
 ALL_SONGS = []
@@ -36,7 +36,9 @@ function getLocation() {
 }
 function showPosition(position) {
 	// this is the line that makes it location based and not just clicking arround
-	//myBestKnownLocation = [position.coords.latitude,position.coords.longitude];
+  if(!DEBUG_ENABLED){
+    myBestKnownLocation = [position.coords.latitude,position.coords.longitude];
+  }
 	console.log(position.coords.latitude + "," + position.coords.longitude);
 }
 function showError(error) {
