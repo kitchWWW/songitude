@@ -1,5 +1,5 @@
 
-DEBUG_ENABLED = false;
+DEBUG_ENABLED = true;
 GLOBAL_TIMESTEP = 200;
 
 ALL_SONGS = []
@@ -21,7 +21,12 @@ function begin(){
   }
   for(var key in ALL_SONGS){
     for(i = 0; i < ALL_SONGS[key].length; i++){
-      ALL_SONGS[key][i].mute()
+      if(key != EXPERIENCE_NAME){
+        ALL_SONGS[key][i].dispose()
+      }
+      else{
+        ALL_SONGS[key][i].mute()
+      }
     } 
   }
 }
