@@ -17,8 +17,8 @@ mySmoothedLocationMarker = L.marker(mySmoothedLocation).addTo(mymap)
 
 function loopingLocationUpdate() {
   // do some math to update the current location to be closer to the new one
-  mySmoothedLocation[0] = mySmoothedLocation[0] + .1 * (myBestKnownLocation[0] -mySmoothedLocation[0])
-  mySmoothedLocation[1] = mySmoothedLocation[1] + .1 * (myBestKnownLocation[1] -mySmoothedLocation[1])
+  mySmoothedLocation[0] = mySmoothedLocation[0] + CATCHUP_SPEED * (myBestKnownLocation[0] -mySmoothedLocation[0])
+  mySmoothedLocation[1] = mySmoothedLocation[1] + CATCHUP_SPEED * (myBestKnownLocation[1] -mySmoothedLocation[1])
   // update the audio to match
   if(IS_LIVE && EXPERIENCE_NAME in ALL_SONGS){
     for(i = 0; i < ALL_SONGS[EXPERIENCE_NAME].length; i++){

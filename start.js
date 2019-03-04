@@ -1,11 +1,12 @@
 
 DEBUG_ENABLED = true;
-GLOBAL_TIMESTEP = 200;
+GLOBAL_TIMESTEP = 1000;
+FADE_BUFFER = 100;
+CATCHUP_SPEED = .2;
 
 ALL_SONGS = []
 IS_LIVE = false;
 EXPERIENCE_NAME = 'noSelection'
-
 
 options = {
   enableHighAccuracy: true,
@@ -19,16 +20,7 @@ function begin(){
     EXPERIENCE_NAME = sel.value
     console.log("chosen: "+EXPERIENCE_NAME)
   }
-  for(var key in ALL_SONGS){
-    for(i = 0; i < ALL_SONGS[key].length; i++){
-      if(key != EXPERIENCE_NAME){
-        ALL_SONGS[key][i].dispose()
-      }
-      else{
-        ALL_SONGS[key][i].mute()
-      }
-    } 
-  }
+  makeAllLive()
 }
 
 
@@ -53,4 +45,24 @@ function showError(error) {
 getLocation();
 // the "looping location update" is the function where literally everything happens
 window.setInterval(loopingLocationUpdate, GLOBAL_TIMESTEP);
+
+
+function makeAllDead(){
+  for(var key in ALL_SONGS){
+    for(i = 0; i < ALL_SONGS[key].length; i++){
+      ALL_SONGS[key][i].makeDead()
+    }
+  }
+}
+
+function makeAllLive(){
+  console.log("We are live wowowowowl")
+  for(i = 0; i < ALL_SONGS[EXPERIENCE_NAME].length; i++){
+    ALL_SONGS[EXPERIENCE_NAME][i].loadAudio()
+    ALL_SONGS[EXPERIENCE_NAME][i].makeLive()
+    ALL_SONGS[EXPERIENCE_NAME][i].mute()
+  }
+  IS_LIVE = true;
+}
+
 

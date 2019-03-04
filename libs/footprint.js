@@ -6,6 +6,7 @@ class Footprint {
     this.soundFilePath = 'works_audio/' + EXPERIENCE_NAME + '/' + file + ".mp3"
     this.maxLevel = maxLevel
     this.parentWork = EXPERIENCE_NAME
+    this.isFadingOff = false
   }
 
 	// used for the legwork
@@ -13,19 +14,27 @@ class Footprint {
 	
 	//used to kill all sound
 	mute(){
-    this.soundFile.setVolume(0)
+    this.soundFile.volume(0)
   }
 
   loadAudio(){
-    this.soundFile = loadSound(this.soundFilePath)
+    this.soundFile = new Howl({
+      src: [this.soundFilePath],
+      autoplay: false,
+      loop: true,
+      volume: 0,
+    });
   }
 
   makeLive(){
     console.log("we are live! from "+this.parentWork)
-    this.soundFile.setVolume(0)
-    this.soundFile.loop()
+    this.soundFile.play()
+    this.soundFile.volume(0)
   }
 
+  makeDead(){
+    this.soundFile.stop()
+  }
 }
 
 
@@ -47,12 +56,16 @@ class FPCircle extends Footprint{
   updateAudioForLocation(lat,lng){
     console.log(this.parentWork)
     var distanceFromCenter = getDistanceFromLatLonInM(lat,lng,this.lat,this.lng)
+    var curVol = this.soundFile.volume()
     if(distanceFromCenter < this.radius){
       var ratio = (this.radius - distanceFromCenter) / this.radius
-      console.log(this.maxLevel)
-      this.soundFile.setVolume(ratio * this.maxLevel,(GLOBAL_TIMESTEP/1000.0))
+      this.soundFile.fade(curVol,ratio * this.maxLevel,(GLOBAL_TIMESTEP - FADE_BUFFER))
+      this.isFadingOff = false
     }else{
-      this.soundFile.setVolume(0,1)
+      if(!this.isFadingOff){
+        this.soundFile.fade(curVol,0,GLOBAL_TIMESTEP - FADE_BUFFER)
+        this.isFadingOff = true
+      }
     }
   }
 }
@@ -68,15 +81,26 @@ class FPPoly extends Footprint{
       fillOpacity: 0.1,
   }).addTo(mymap);
     this.geoInfo = geoInfo
-    this.fadeTime = 1
+    this.fadeTime = 2 // in SECONDS
 
+    this.isFadingOn = false
   }
 
   updateAudioForLocation(lat,lng){
+    var curVol = this.soundFile.volume()
     if(inside(lat,lng,this.shape)){
-      this.soundFile.setVolume(this.maxLevel,this.fadeTime)
+      if(this.isFadingOn == false){
+        this.soundFile.fade(curVol,this.maxLevel,this.fadeTime*1000 - FADE_BUFFER)
+        this.isFadingOn = true
+        this.isFadingOff = false
+      }
     }else{
-      this.soundFile.setVolume(0,this.fadeTime)
+      if(this.isFadingOff == false){
+        this.soundFile.fade(curVol,0,this.fadeTime*1000 - FADE_BUFFER)
+        this.isFadingOn = false
+        this.isFadingOff = true
+      }
+
     }
   }
 }
