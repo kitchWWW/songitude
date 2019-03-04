@@ -7,6 +7,8 @@ class Footprint {
     this.maxLevel = maxLevel
     this.parentWork = EXPERIENCE_NAME
     this.isFadingOff = false
+    this.targetValues = []
+    this.isloaded = false
   }
 
 	// used for the legwork
@@ -14,26 +16,72 @@ class Footprint {
 	
 	//used to kill all sound
 	mute(){
-    this.soundFile.volume(0)
+    this.soundFile.volume = 0
   }
 
   loadAudio(){
-    this.soundFile = new Howl({
-      src: [this.soundFilePath],
-      autoplay: false,
-      loop: true,
-      volume: 0,
-    });
+    var me = this;
+    this.soundFile = new Pizzicato.Sound({ 
+        source: 'file',
+        options: { path: this.soundFilePath,
+          volume: 1,
+          loop: true,
+           }
+        }, function(){
+          me.isloaded = true
+          songsActuallyLoaded += 1
+          console.log("this thing"+me.soundFilePath+" is loaded.")
+        });
   }
 
   makeLive(){
-    console.log("we are live! from "+this.parentWork)
-    this.soundFile.play()
-    this.soundFile.volume(0)
+    if(this.isloaded){
+      this.soundFile.play(0,0)
+      this.soundFile.volume = 0
+    }
   }
 
   makeDead(){
     this.soundFile.stop()
+  }
+
+  _getparam(param){
+    if(param == "vol"){
+      return this.soundFile.volume
+    }
+  }
+
+  _setparam(param,val){
+    if(param == "vol"){
+      this.soundFile.volume = val
+    }
+  }
+
+  _fade(param,target,duration){
+    var me = this;
+    var startTime = new Date().getTime();
+    var startParam = me._getparam(param)
+    var endTime = startTime + duration
+
+    me.targetValues[param] = [startParam,target,startTime,endTime]
+
+    var myInterval = setInterval(function(){
+      var currTime = new Date().getTime();
+      var currentDuration = me.targetValues[param][3] - me.targetValues[param][2]
+      var timeDiff = currTime -  me.targetValues[param][2] + 0.0;
+      var ratio = timeDiff / currentDuration
+      if(ratio > 1){
+        ratio = 1
+      }
+      var totalSpan = me.targetValues[param][1] - me.targetValues[param][0]
+      var finalVol = ratio * totalSpan + me.targetValues[param][0]    
+      me._setparam(param, finalVol)
+    
+      if(currTime >= endTime) {
+        clearInterval(myInterval);
+      }
+    }, 5);
+
   }
 }
 
@@ -55,15 +103,14 @@ class FPCircle extends Footprint{
 
   updateAudioForLocation(lat,lng){
     var distanceFromCenter = getDistanceFromLatLonInM(lat,lng,this.lat,this.lng)
-    var curVol = this.soundFile.volume()
     if(distanceFromCenter < this.radius){
-      console.log("Playing!" + this.soundFilePath)
+      //console.log("Playing!" + this.soundFilePath)
       var ratio = (this.radius - distanceFromCenter) / this.radius
-      this.soundFile.fade(curVol,ratio * this.maxLevel,(GLOBAL_TIMESTEP - FADE_BUFFER))
+      this._fade("vol",ratio * this.maxLevel, GLOBAL_TIMESTEP - FADE_BUFFER)
       this.isFadingOff = false
     }else{
       if(this.isFadingOff == false){
-        this.soundFile.fade(curVol,0,GLOBAL_TIMESTEP - FADE_BUFFER)
+        this._fade("vol",0,GLOBAL_TIMESTEP - FADE_BUFFER)
         this.isFadingOff = true
       }
     }
@@ -87,20 +134,20 @@ class FPPoly extends Footprint{
   }
 
   updateAudioForLocation(lat,lng){
-    var curVol = this.soundFile.volume()
     if(inside(lat,lng,this.shape)){
       if(this.isFadingOn == false){
-        this.soundFile.fade(curVol,this.maxLevel,this.fadeTime*1000 - FADE_BUFFER)
+        console.log("fading in!")
+        this._fade("vol",this.maxLevel,this.fadeTime*1000 - FADE_BUFFER)
         this.isFadingOn = true
         this.isFadingOff = false
       }
     }else{
       if(this.isFadingOff == false){
-        this.soundFile.fade(curVol,0,this.fadeTime*1000 - FADE_BUFFER)
+        console.log("fading out!")
+        this._fade("vol",0,this.fadeTime*1000 - FADE_BUFFER)
         this.isFadingOn = false
         this.isFadingOff = true
       }
-
     }
   }
 }
