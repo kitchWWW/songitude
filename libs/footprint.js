@@ -54,15 +54,15 @@ class FPCircle extends Footprint{
   }
 
   updateAudioForLocation(lat,lng){
-    console.log(this.parentWork)
     var distanceFromCenter = getDistanceFromLatLonInM(lat,lng,this.lat,this.lng)
     var curVol = this.soundFile.volume()
     if(distanceFromCenter < this.radius){
+      console.log("Playing!" + this.soundFilePath)
       var ratio = (this.radius - distanceFromCenter) / this.radius
       this.soundFile.fade(curVol,ratio * this.maxLevel,(GLOBAL_TIMESTEP - FADE_BUFFER))
       this.isFadingOff = false
     }else{
-      if(!this.isFadingOff){
+      if(this.isFadingOff == false){
         this.soundFile.fade(curVol,0,GLOBAL_TIMESTEP - FADE_BUFFER)
         this.isFadingOff = true
       }
