@@ -3,7 +3,7 @@
 class Footprint {
 
   constructor(file,maxLevel){
-    if(parseInt(file) > 15){
+    if(!isNaN(file)){
     	this.soundFilePath = file //if it is a sine wave. Also needs to be audible.
     } else{
 	    this.soundFilePath = 'works_audio/' + EXPERIENCE_NAME + '/' + file + ".mp3"
@@ -42,7 +42,7 @@ class Footprint {
     	me.soundFile = new Pizzicato.Sound({ 
 		    source: 'wave', 
 		    options: {
-		        frequency: parseInt(this.soundFilePath)
+		        frequency: parseFloat(this.soundFilePath)
 		    }
 		});
 		me.isloaded = true
