@@ -3,7 +3,11 @@
 class Footprint {
 
   constructor(file,maxLevel){
-    this.soundFilePath = 'works_audio/' + EXPERIENCE_NAME + '/' + file + ".mp3"
+    if(parseInt(file) > 15){
+    	this.soundFilePath = file //if it is a sine wave. Also needs to be audible.
+    } else{
+	    this.soundFilePath = 'works_audio/' + EXPERIENCE_NAME + '/' + file + ".mp3"
+    }
     this.maxLevel = maxLevel
     this.parentWork = EXPERIENCE_NAME
     this.isFadingOff = false
@@ -21,7 +25,8 @@ class Footprint {
 
   loadAudio(){
     var me = this;
-    this.soundFile = new Pizzicato.Sound({ 
+    if(me.soundFilePath.startsWith("works_audio")){
+    	this.soundFile = new Pizzicato.Sound({ 
         source: 'file',
         options: { path: this.soundFilePath,
           volume: 1,
@@ -32,6 +37,19 @@ class Footprint {
           songsActuallyLoaded += 1
           console.log("this thing"+me.soundFilePath+" is loaded.")
         });
+    }
+    else{
+    	me.soundFile = new Pizzicato.Sound({ 
+		    source: 'wave', 
+		    options: {
+		        frequency: parseInt(this.soundFilePath)
+		    }
+		});
+		me.isloaded = true
+		songsActuallyLoaded += 1
+		console.log("this thing "+me.soundFilePath+" is a wave.")
+    }
+    
   }
 
   makeLive(){
