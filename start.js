@@ -121,6 +121,8 @@ function makeAllLive(){
 
 function doDebug(){
   console.log(document.getElementById("debugEnableCheckbox").value)
+  DEBUG_ENABLED = !DEBUG_ENABLED
+  console.log(DEBUG_ENABLED)
 }
 
 
