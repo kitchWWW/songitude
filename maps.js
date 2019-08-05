@@ -1,4 +1,4 @@
-startLocation = [30.288220, -97.743252]
+startLocation = [37.453056, -122.117828]
 
 myBestKnownLocation = [startLocation[0],startLocation[1]];
 mySmoothedLocation = [startLocation[0],startLocation[1]];

@@ -84,9 +84,11 @@ function startDisplayLoading(){
 
 window.onload = function() {
   EXPERIENCE_NAME = getUrlVars()['experience']
-
   loadAllAudio();
   startDisplayLoading();
+  for(i = 0; i < ALL_SONGS[EXPERIENCE_NAME].length; i++){
+    ALL_SONGS[EXPERIENCE_NAME][i].addToMap()
+  }
 };
 
 function makeAllDead(key){
@@ -100,7 +102,6 @@ function makeAllLive(){
   group = new Pizzicato.Group();
   console.log("We are live wowowowowl")
   for(i = 0; i < ALL_SONGS[EXPERIENCE_NAME].length; i++){
-    ALL_SONGS[EXPERIENCE_NAME][i].addToMap()
     ALL_SONGS[EXPERIENCE_NAME][i].makeLive()
     try{
       group.addSound(ALL_SONGS[EXPERIENCE_NAME][i].soundFile)

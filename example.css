@@ -1,4 +1,3 @@
-
 /* Create two equal columns that floats next to each other */
 .column {
     float: left;
@@ -47,8 +46,6 @@
 .experiencesList{
   font-family: "Arial";
   text-align: center;
-
-
 }
 
 body {
@@ -56,18 +53,20 @@ body {
 
 }
 
-.everything{
-		    padding: 10px;
+#mapid { height: 180px; }
 
+
+.everything{
+  padding: 10px;
 }
 
 .center {
 	border-radius: 25px;
  	text-align: center;
-    margin: auto;
-    max-width: 500px;
-    background-color: #FFFFFF;
-    padding: 20px;
+  margin: auto;
+  max-width: 500px;
+  background-color: #FFFFFF;
+  padding: 20px;
 }
 
 .devInfo {
