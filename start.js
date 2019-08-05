@@ -1,4 +1,3 @@
-
 DEBUG_ENABLED = false;
 GLOBAL_TIMESTEP = 200;
 FADE_BUFFER = 100;
@@ -15,20 +14,17 @@ options = {
 };
 
 function begin(){
-  var sel = document.getElementById('experienceSelector');
-  if(sel.value != 'noSelection'){
-    EXPERIENCE_NAME = sel.value
-    console.log("chosen: "+EXPERIENCE_NAME)
-  }
+  console.log("beginning")
+  console.log(EXPERIENCE_NAME)
   makeAllLive()
-  document.getElementById("allSelection").style.display="none"
+  document.getElementById("beginExperience").style.display="none"
   document.getElementById("exitExperience").style.display="inline"
 
 }
 
 function exit(){
   console.log(EXPERIENCE_NAME)
-  document.getElementById("allSelection").style.display="inline"
+  document.getElementById("beginExperience").style.display="inline"
   document.getElementById("exitExperience").style.display="none"
   makeAllDead(EXPERIENCE_NAME)
 }
@@ -55,15 +51,16 @@ getLocation();
 // the "looping location update" is the function where literally everything happens
 window.setInterval(loopingLocationUpdate, GLOBAL_TIMESTEP);
 
+
+// now we can set up the thing where we choose which experience we want:
 songsToLoad = 0
 songsActuallyLoaded = 0
+EXPERIENCE_NAME = 'default'
 function loadAllAudio(){
-  for(var key in ALL_SONGS){
-    for(i = 0; i < ALL_SONGS[key].length; i++){
-      ALL_SONGS[key][i].loadAudio()
-      console.log("loading....")
-      songsToLoad += 1
-    }
+  for(i = 0; i < ALL_SONGS[EXPERIENCE_NAME].length; i++){
+    ALL_SONGS[EXPERIENCE_NAME][i].loadAudio()
+    console.log("loading....")
+    songsToLoad += 1
   }
 }
 
@@ -75,7 +72,7 @@ function displayLoading(){
     document.getElementById("loadingText").innerHTML = "Loaded!"
     clearInterval(refreshIntervalId);
     document.getElementById("allLoading").style.display="none"
-    document.getElementById("allSelection").style.display="inline"
+    document.getElementById("beginExperience").style.display="inline"
 
   }
 }
@@ -86,6 +83,8 @@ function startDisplayLoading(){
 
 
 window.onload = function() {
+  EXPERIENCE_NAME = getUrlVars()['experience']
+
   loadAllAudio();
   startDisplayLoading();
 };
@@ -101,6 +100,7 @@ function makeAllLive(){
   group = new Pizzicato.Group();
   console.log("We are live wowowowowl")
   for(i = 0; i < ALL_SONGS[EXPERIENCE_NAME].length; i++){
+    ALL_SONGS[EXPERIENCE_NAME][i].addToMap()
     ALL_SONGS[EXPERIENCE_NAME][i].makeLive()
     try{
       group.addSound(ALL_SONGS[EXPERIENCE_NAME][i].soundFile)
@@ -119,6 +119,9 @@ function makeAllLive(){
 
 }
 
+function doDebug(){
+  console.log(document.getElementById("debugEnableCheckbox").value)
+}
 
 
 function fetchHeader(url, wch) {

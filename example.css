@@ -19,6 +19,9 @@
     }
 }
 
+.experienceButton{
+  width: 200px;
+}
 
 .myTitle {
   font-size: 55px;
@@ -29,9 +32,22 @@
 }
 
 .mySubTitle {
-    font-style: italic;
+  font-style: italic;
   font-size: 20px;
  color: #7A7093;
+
+}
+.myBodyParagraph{
+  font-family: "Arial";
+  text-align: left;
+  color:#555555;
+
+}
+
+.experiencesList{
+  font-family: "Arial";
+  text-align: center;
+
 
 }
 

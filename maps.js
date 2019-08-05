@@ -26,27 +26,20 @@ function loopingLocationUpdate() {
     }    
   }
   // and update the map to look like it
-  updateMap()
-}
-
-function updateMap() {
   mymap.removeLayer(myBestLocationMarker)
   myBestLocationMarker = L.marker(myBestKnownLocation).addTo(mymap)
 
   mymap.removeLayer(mySmoothedLocationMarker)
   mySmoothedLocationMarker = L.marker(mySmoothedLocation).addTo(mymap)
+  mymap.setView(mySmoothedLocation)
 }
 
+
 function onMapClick(e) {
-  if(true){
+  if(DEBUG_ENABLED){
     myBestKnownLocation = [e.latlng.lat, e.latlng.lng];
     console.log(myBestKnownLocation);    
   }
 }
 
 mymap.on('click', onMapClick);
-
-
-
-
-

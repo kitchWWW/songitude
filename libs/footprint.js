@@ -15,6 +15,10 @@ class Footprint {
     this.isloaded = false
   }
 
+  addToMap(){
+    this.shape.addTo(mymap);
+  }
+
 	// used for the legwork
 	updateAudioForLocation(lat,lng){}
 	
@@ -113,7 +117,7 @@ class FPCircle extends Footprint{
       fillColor: color,
       fillOpacity: 0.1,
       radius: geoInfo[1]
-  }).addTo(mymap);
+  });
     this.lat = geoInfo[0][0]
     this.lng = geoInfo[0][1]
     this.radius = geoInfo[1]
@@ -144,10 +148,9 @@ class FPPoly extends Footprint{
       color: color,
       fillColor: color,
       fillOpacity: 0.1,
-  }).addTo(mymap);
+  });
     this.geoInfo = geoInfo
     this.fadeTime = 2 // in SECONDS
-
     this.isFadingOn = false
   }
 
@@ -173,4 +176,35 @@ class FPPoly extends Footprint{
 
 
 
+
+
+class FPPolyEcho extends FPPoly{
+	constructor(file,maxLevel,color,geoInfo,timingProbs) {
+		super(file,maxLevel,color,geoInfo)
+		this.timingProbs = timingProbs
+		this.currentTimeout = 0
+	}
+
+	stochasticPlay(){
+		console.log("scheduling playing!")
+		var me = this
+		me.currentTimeout = setTimeout( function(){
+			console.log("playing soundfile now")
+			me.soundFile.play(0,0)
+			me.stochasticPlay()
+		},1000)
+	}
+
+	makeLive(){
+		console.log("added it!")
+		this.soundFile.loop = false
+		this.soundFile.on('end', this.stochasticPlay())
+		this.stochasticPlay()
+	}
+
+	makeDead(){
+		console.log("killing timeout!")
+		clearTimeout(this.currentTimeout)
+	}
+}
 
