@@ -1,7 +1,7 @@
 startLocation = [37.453056, -122.117828]
 
-myBestKnownLocation = [startLocation[0],startLocation[1]];
-mySmoothedLocation = [startLocation[0],startLocation[1]];
+myBestKnownLocation = [startLocation[0], startLocation[1]];
+mySmoothedLocation = [startLocation[0], startLocation[1]];
 
 var mymap = L.map('mapid').setView(startLocation, 15);
 
@@ -17,13 +17,13 @@ mySmoothedLocationMarker = L.marker(mySmoothedLocation).addTo(mymap)
 
 function loopingLocationUpdate() {
   // do some math to update the current location to be closer to the new one
-  mySmoothedLocation[0] = mySmoothedLocation[0] + CATCHUP_SPEED * (myBestKnownLocation[0] -mySmoothedLocation[0])
-  mySmoothedLocation[1] = mySmoothedLocation[1] + CATCHUP_SPEED * (myBestKnownLocation[1] -mySmoothedLocation[1])
+  mySmoothedLocation[0] = mySmoothedLocation[0] + CATCHUP_SPEED * (myBestKnownLocation[0] - mySmoothedLocation[0])
+  mySmoothedLocation[1] = mySmoothedLocation[1] + CATCHUP_SPEED * (myBestKnownLocation[1] - mySmoothedLocation[1])
   // update the audio to match
-  if(IS_LIVE && EXPERIENCE_NAME in ALL_SONGS){
-    for(i = 0; i < ALL_SONGS[EXPERIENCE_NAME].length; i++){
-      ALL_SONGS[EXPERIENCE_NAME][i].updateAudioForLocation(mySmoothedLocation[0],mySmoothedLocation[1])
-    }    
+  if (IS_LIVE && EXPERIENCE_NAME in ALL_SONGS) {
+    for (i = 0; i < ALL_SONGS[EXPERIENCE_NAME].length; i++) {
+      ALL_SONGS[EXPERIENCE_NAME][i].updateAudioForLocation(mySmoothedLocation[0], mySmoothedLocation[1])
+    }
   }
   // and update the map to look like it
   mymap.removeLayer(myBestLocationMarker)
@@ -36,9 +36,9 @@ function loopingLocationUpdate() {
 
 
 function onMapClick(e) {
-  if(DEBUG_ENABLED){
+  if (DEBUG_ENABLED) {
     myBestKnownLocation = [e.latlng.lat, e.latlng.lng];
-    console.log(myBestKnownLocation);    
+    console.log(myBestKnownLocation[0] + "," + myBestKnownLocation[1]);
   }
 }
 
